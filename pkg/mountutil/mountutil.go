@@ -68,8 +68,10 @@ func ProcessFlagV(s string, volStore volumestore.VolumeStore) (*Processed, error
 	case 2, 3, 4:
 		res.Type = Bind
 		if len(split) == 4 { //For binding volumes to windows containers
-			src = split[0] + ":" + split[1]
-			dst = split[2] + ":" + split[3]
+			src, dst = split[0]+":"+split[1], split[2]+":"+split[3]
+		} else if len(split) == 3 { //For binding named volume
+			src, dst = split[0], split[1]+":"+split[2]
+
 		} else {
 			src, dst = split[0], split[1]
 		}
