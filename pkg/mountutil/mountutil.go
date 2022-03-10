@@ -65,10 +65,15 @@ func ProcessFlagV(s string, volStore volumestore.VolumeStore) (*Processed, error
 		}
 		src = anonVol.Mountpoint
 		res.Type = Volume
-	case 2, 3:
+	case 2, 3, 4:
 		res.Type = Bind
-		src, dst = split[0], split[1]
-		if !strings.Contains(src, "/") {
+		if len(split) == 4 { //For binding volumes to windows containers
+			src = split[0] + ":" + split[1]
+			dst = split[2] + ":" + split[3]
+		} else {
+			src, dst = split[0], split[1]
+		}
+		if !strings.Contains(src, "/") && !strings.Contains(src, "\\") {
 			// assume src is a volume name
 			vol, err := volStore.Get(src)
 			if err != nil {
@@ -115,7 +120,7 @@ func ProcessFlagV(s string, volStore volumestore.VolumeStore) (*Processed, error
 
 	fstype := "nullfs"
 	if runtime.GOOS != "freebsd" {
-		fstype = "none"
+		fstype = ""
 		options = append(options, "rbind")
 	}
 	res.Mount = specs.Mount{
