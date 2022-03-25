@@ -417,7 +417,7 @@ func NewBase(t *testing.T) *Base {
 	var err error
 	switch base.Target {
 	case Nerdctl:
-		base.Binary, err = exec.LookPath("nerdctl")
+		base.Binary, err = exec.LookPath("C:/nerdctl2/cmd/nerdctl/nerdctl.exe")
 		if err != nil {
 			t.Fatal(err)
 		}
