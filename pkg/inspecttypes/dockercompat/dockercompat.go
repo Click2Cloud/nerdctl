@@ -106,7 +106,7 @@ type Container struct {
 	// TODO: SizeRw     *int64 `json:",omitempty"`
 	// TODO: SizeRootFs *int64 `json:",omitempty"`
 
-	// TODO: Mounts          []MountPoint
+	Mounts []specs.Mount
 	// TODO: Config          *container.Config
 	NetworkSettings *NetworkSettings
 }
@@ -195,12 +195,19 @@ type NetworkEndpointSettings struct {
 
 // ContainerFromNative instantiates a Docker-compatible Container from containerd-native Container.
 func ContainerFromNative(n *native.Container) (*Container, error) {
+	// for unmarshalling mount details
+	var mount *specs.Spec
+	err := json.Unmarshal(n.Container.Spec.Value, &mount)
+	if err != nil {
+		return nil, err
+	}
 	c := &Container{
 		ID:       n.ID,
 		Created:  n.CreatedAt.Format(time.RFC3339Nano),
 		Image:    n.Image,
 		Name:     n.Labels[labels.Name],
 		Driver:   n.Snapshotter,
+		Mounts:   mount.Mounts,
 		Platform: runtime.GOOS, // for Docker compatibility, this Platform string does NOT contain arch like "/amd64"
 	}
 	if sp, ok := n.Spec.(*specs.Spec); ok {
