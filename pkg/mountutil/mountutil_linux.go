@@ -19,6 +19,11 @@ package mountutil
 import (
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	"github.com/containerd/containerd/containers"
 	"github.com/containerd/containerd/mount"
 	"github.com/containerd/containerd/oci"
@@ -28,10 +33,6 @@ import (
 	"github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sys/unix"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 // getUnprivilegedMountFlags is from https://github.com/moby/moby/blob/v20.10.5/daemon/oci_linux.go#L420-L450

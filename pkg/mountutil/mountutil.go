@@ -19,6 +19,10 @@ package mountutil
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
+	"runtime"
+	"strings"
+
 	"github.com/containerd/containerd/errdefs"
 	"github.com/containerd/containerd/oci"
 	"github.com/containerd/containerd/sys"
@@ -26,10 +30,8 @@ import (
 	"github.com/containerd/nerdctl/pkg/mountutil/volumestore"
 	"github.com/containerd/nerdctl/pkg/strutil"
 	"github.com/opencontainers/runtime-spec/specs-go"
+
 	"github.com/sirupsen/logrus"
-	"path/filepath"
-	"runtime"
-	"strings"
 )
 
 const (
@@ -52,7 +54,6 @@ func ProcessFlagV(s string, volStore volumestore.VolumeStore) (*Processed, error
 		src, dst string
 		options  []string
 	)
-
 	if runtime.GOOS == "windows" {
 		sr, ds, optns, err := ProcessSplit(s, volStore, res, src, dst, options)
 		if err != nil {
@@ -122,8 +123,8 @@ func ProcessFlagV(s string, volStore volumestore.VolumeStore) (*Processed, error
 		default:
 			return nil, fmt.Errorf("failed to parse %q", s)
 		}
-	}
 
+	}
 	fstype := "nullfs"
 	if runtime.GOOS != "freebsd" {
 		fstype = "none"

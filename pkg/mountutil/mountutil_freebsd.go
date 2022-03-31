@@ -18,11 +18,12 @@ package mountutil
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/containerd/containerd/errdefs"
 	"github.com/containerd/containerd/oci"
 	"github.com/containerd/nerdctl/pkg/mountutil/volumestore"
 	"github.com/sirupsen/logrus"
-	"strings"
 )
 
 func getUnprivilegedMountFlags(path string) ([]string, error) {
